@@ -4,63 +4,58 @@
 #include <windows.h>
 #include "shell.h"
 
-
 void execute_command(char **args, int background) {
-    // Debug: Log the command being executed
-    printf("Executing command: %s\n", args[0]);
-    
-    if (execute_builtin(args)) {
-        return; // If it's a built-in command, return early
-    }
-
-
-    // Handle other commands
     STARTUPINFO si;
     PROCESS_INFORMATION pi;
+    char command[1024] = "cmd.exe /c "; // Use Windows Command Prompt
+    size_t command_length = strlen(command);
+    
+    // Convert args[] array into a single command string
+    for (int i = 0; args[i] != NULL; i++) {
+        if (command_length + strlen(args[i]) + 1 < sizeof(command)) {
+            strcat(command, args[i]);
+            strcat(command, " ");
+            command_length += strlen(args[i]) + 1; // Update command length
+        } else {
+            fprintf(stderr, "Error: Command is too long to execute.\n");
+            return;
+        }
+    }
+
     ZeroMemory(&si, sizeof(si));
     si.cb = sizeof(si);
     ZeroMemory(&pi, sizeof(pi));
 
-    // Create the command string with arguments
-    char command[MAX_INPUT_SIZE];
-    snprintf(command, sizeof(command), "%s", args[0]);
-    for (int i = 1; args[i] != NULL; i++) {
-        strcat(command, " ");
-        strcat(command, args[i]);
-    }
-
-
-    // Check for Windows-specific commands
-    if (strcmp(args[0], "ls") == 0) {
-        strcpy(args[0], "dir"); // Change 'ls' to 'dir'
-    }
-    // Create a new process to execute the command
-    // Debug: Log the constructed command string
-    printf("Constructed command: %s\n", command);
-
-    // Ensure the command is valid
-
-    // Ensure the command is valid
-
+    // Create a new process for the command
     if (!CreateProcess(NULL, command, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
-        fprintf(stderr, "Error executing command: %s\n", args[0]);
-    } else {
-        // Wait for the process to finish if not background
-        if (!background) {
-            WaitForSingleObject(pi.hProcess, INFINITE);
-        }
-        CloseHandle(pi.hProcess);
-        CloseHandle(pi.hThread);
+        fprintf(stderr, "Error: Command execution failed for command: %s\n", command);
+        return;
     }
 
-}
+    if (background) {
+        CreateProcess(NULL, command, NULL, NULL, FALSE, CREATE_NO_WINDOW, NULL, NULL, &si, &pi);
+    } else {
+        WaitForSingleObject(pi.hProcess, INFINITE);
+    }
 
+    // Close process handles
+    CloseHandle(pi.hProcess);
+    CloseHandle(pi.hThread);
+}
 
 void process_input(char *input) {
     char *args[MAX_ARGS];
     int background = parse_input(input, args);
+    
+    // Check for exit command
+    if (args[0] != NULL && strcmp(args[0], "exit") == 0) {
+        handle_exit(); // Call handle_exit to terminate the shell
+        return;
+    }
+    
     execute_command(args, background);
 }
+
 
 int main() {
     char input[MAX_INPUT_SIZE];
@@ -69,7 +64,7 @@ int main() {
         // Remove the trailing newline character
         input[strcspn(input, "\n")] = 0; 
 
-    printf("MyShell> "); // Prompt for user input
+        printf("> "); // Prompt for user input
 
         if (fgets(input, sizeof(input), stdin) == NULL) {
             break; // Exit on EOF

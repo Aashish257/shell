@@ -6,27 +6,21 @@
 #include "shell.h"
 
 void handle_cd(char **args) {
-    // Debug: Log the command being executed
-    printf("Executing command: cd with argument: %s\n", args[1]);
-
     if (args[1] == NULL) {
-        fprintf(stderr, "cd: missing argument\n");
+        printf("cd: missing argument\n");
     } else {
-        if (_chdir(args[1]) != 0) { // Use _chdir for Windows compatibility
-            perror("cd");
+        if (_chdir(args[1]) != 0) {
+            perror("cd failed");
         }
     }
 }
 
 void handle_pwd() {
-    // Debug: Log the command being executed
-    printf("Executing command: pwd\n");
-
-    char cwd[MAX_INPUT_SIZE];
-    if (GetCurrentDirectory(MAX_INPUT_SIZE, cwd) != 0) {
+    char cwd[1024];
+    if (_getcwd(cwd, sizeof(cwd)) != NULL) {
         printf("%s\n", cwd);
     } else {
-        perror("pwd");
+        perror("pwd failed");
     }
 }
 

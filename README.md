@@ -22,3 +22,6 @@ You can then enter commands such as:
 - `cd <directory>`: Change the current directory.
 - `dir`: List the contents of the current directory.
 - `exit`: Terminate the shell.
+
+## Additional Notes
+- The `pwd` command is not recognized in Windows Command Prompt; use `echo %cd%` instead to display the current directory.

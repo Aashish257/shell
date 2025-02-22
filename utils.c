@@ -6,7 +6,8 @@
 #include "shell.h"
 
 int parse_input(char *input, char **args) {
-    if (input == NULL || strlen(input) == 0) {
+    if (input == NULL || strlen(input) == 0 || strspn(input, " ") == strlen(input)) {
+
         fprintf(stderr, "Error: No input provided\n");
         return 0; // Return 0 for no arguments
     }
@@ -17,10 +18,8 @@ int parse_input(char *input, char **args) {
     int background = 0;
 
     while (token != NULL) { 
-        if (strcmp(token, "") == 0) {
-            fprintf(stderr, "Error: Empty command\n");
-            return 0; // Return 0 for empty command
-        }
+        // Skip empty tokens
+
 
         if (strcmp(token, "&") == 0) {
             background = 1;  // Mark as background process
