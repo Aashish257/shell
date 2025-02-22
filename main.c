@@ -1,21 +1,60 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <windows.h>
 #include "shell.h"
 
-void execute_command(char **args, int background) {
-    if (strcmp(args[0], "exit") == 0) {
-        handle_exit();
-    } else if (strcmp(args[0], "cd") == 0) {
-        handle_cd(args);
-    } else if (strcmp(args[0], "pwd") == 0) {
-        handle_pwd();
-    } else if (strcmp(args[0], "dir") == 0) {
-        system("dir"); // Handle dir command
 
-        // Handle other commands
+void execute_command(char **args, int background) {
+    // Debug: Log the command being executed
+    printf("Executing command: %s\n", args[0]);
+    
+    if (execute_builtin(args)) {
+        return; // If it's a built-in command, return early
     }
+
+
+    // Handle other commands
+    STARTUPINFO si;
+    PROCESS_INFORMATION pi;
+    ZeroMemory(&si, sizeof(si));
+    si.cb = sizeof(si);
+    ZeroMemory(&pi, sizeof(pi));
+
+    // Create the command string with arguments
+    char command[MAX_INPUT_SIZE];
+    snprintf(command, sizeof(command), "%s", args[0]);
+    for (int i = 1; args[i] != NULL; i++) {
+        strcat(command, " ");
+        strcat(command, args[i]);
+    }
+
+
+    // Check for Windows-specific commands
+    if (strcmp(args[0], "ls") == 0) {
+        strcpy(args[0], "dir"); // Change 'ls' to 'dir'
+    }
+    // Create a new process to execute the command
+    // Debug: Log the constructed command string
+    printf("Constructed command: %s\n", command);
+
+    // Ensure the command is valid
+
+    // Ensure the command is valid
+
+    if (!CreateProcess(NULL, command, NULL, NULL, FALSE, 0, NULL, NULL, &si, &pi)) {
+        fprintf(stderr, "Error executing command: %s\n", args[0]);
+    } else {
+        // Wait for the process to finish if not background
+        if (!background) {
+            WaitForSingleObject(pi.hProcess, INFINITE);
+        }
+        CloseHandle(pi.hProcess);
+        CloseHandle(pi.hThread);
+    }
+
 }
+
 
 void process_input(char *input) {
     char *args[MAX_ARGS];
@@ -30,7 +69,8 @@ int main() {
         // Remove the trailing newline character
         input[strcspn(input, "\n")] = 0; 
 
-        printf("MyShell> ");
+    printf("MyShell> "); // Prompt for user input
+
         if (fgets(input, sizeof(input), stdin) == NULL) {
             break; // Exit on EOF
         }
