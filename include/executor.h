@@ -1,6 +1,8 @@
 #ifndef EXECUTOR_H
 #define EXECUTOR_H
 
-// Execution logic for commands declarations
+/**
+ * Declarations for command execution logic.
+ */
 
 #endif // EXECUTOR_H

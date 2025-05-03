@@ -1,6 +1,8 @@
 #ifndef PARSER_H
 #define PARSER_H
 
-// Input parsing utilities declarations
+/**
+ * Declarations for input parsing utilities.
+ */
 
 #endif // PARSER_H
