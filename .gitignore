@@ -1,0 +1,18 @@
+# Ignore binaries
+*.exe
+*.dll
+*.so
+*.o
+*.obj
+
+# Ignore logs
+logs/
+*.log
+
+# Ignore history files
+history/
+*.history
+
+# Ignore build artifacts
+build/
+dist/

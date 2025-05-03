@@ -17,6 +17,7 @@
 #endif
 
 #include "shell.h"
+#include "jobs.h"
 
 void handle_cd(char **args) {
     char *path;
@@ -94,6 +95,10 @@ void handle_fg(char **args) {
 #endif
 
 // Function to check and execute built-in commands
+void handle_history() {
+    print_history();
+}
+
 int execute_builtin(char **args) {
     if (strcmp(args[0], "cd") == 0) {
         handle_cd(args);
@@ -117,6 +122,10 @@ int execute_builtin(char **args) {
     }
     if (strcmp(args[0], "fg") == 0) {
         handle_fg(args);
+        return 1;
+    }
+    if (strcmp(args[0], "history") == 0) {
+        handle_history();
         return 1;
     }
     return 0;  // Not a built-in command
