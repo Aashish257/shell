@@ -11,6 +11,10 @@
 #include "history.h"
 #include "jobs.h"
 
+/**
+ * Processes the user input command.
+ * Parses the input, handles built-in commands, and executes external commands.
+ */
 void process_input(char *input) {
     char *args[MAX_ARGS];
     int background = parse_input(input, args);
@@ -19,11 +23,13 @@ void process_input(char *input) {
         return;
     }
 
+    // Add command to history if not duplicate of last command
     if (strlen(input) > 0 && (get_history_count() == 0 || strcmp(input, get_history_command(get_history_count() - 1)) != 0)) {
         add_history(input);
         save_history();
     }
 
+    // Handle built-in job control commands
     if (strcmp(args[0], "jobs") == 0) {
         handle_jobs();
         return;
@@ -35,14 +41,20 @@ void process_input(char *input) {
         return;
     }
 
+    // Execute other built-in commands
     if (execute_builtin(args)) {
         return;
     }
 
+    // Execute external command
     execute_command(args, background);
 }
 
 #ifdef _WIN32
+/**
+ * Reads user input with command history navigation support (Windows).
+ * Supports arrow keys for navigating command history.
+ */
 void read_input_with_history(char *buffer, size_t size) {
     int pos = 0;
     int current_history_index = get_history_count();
@@ -110,6 +122,10 @@ void read_input_with_history(char *buffer, size_t size) {
 }
 #endif
 
+/**
+ * Main entry point of the shell program.
+ * Loads command history, reads user input, processes commands, and saves history on exit.
+ */
 int main() {
     char input[MAX_INPUT_SIZE];
 

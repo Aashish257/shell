@@ -8,18 +8,25 @@
 
 #define MAX_JOBS 64
 
+/**
+ * Structure representing a background job.
+ */
 typedef struct {
-    HANDLE processHandle;
-    DWORD processId;
-    HANDLE threadHandle;
-    int jobId;
-    int running;
-    char commandLine[256];
+    HANDLE processHandle;   // Handle to the process
+    DWORD processId;        // Process ID
+    HANDLE threadHandle;    // Handle to the thread
+    int jobId;              // Job ID
+    int running;            // Running status (1 = running, 0 = stopped)
+    char commandLine[256];  // Command line string
 } Job;
 
 static Job jobs[MAX_JOBS];
 static int jobCount = 0;
 
+/**
+ * Adds a new job to the job list.
+ * @return Job ID on success, -1 if job list is full.
+ */
 int add_job(HANDLE processHandle, HANDLE threadHandle, DWORD processId, const char* commandLine) {
     if (jobCount >= MAX_JOBS) {
         return -1;
@@ -35,6 +42,9 @@ int add_job(HANDLE processHandle, HANDLE threadHandle, DWORD processId, const ch
     return jobs[jobCount - 1].jobId;
 }
 
+/**
+ * Lists all running background jobs.
+ */
 void list_jobs() {
     printf("Background jobs:\n");
     for (int i = 0; i < jobCount; i++) {
@@ -44,6 +54,10 @@ void list_jobs() {
     }
 }
 
+/**
+ * Terminates a job by its job ID.
+ * @return 0 on success, -1 on failure.
+ */
 int kill_job(int jobId) {
     for (int i = 0; i < jobCount; i++) {
         if (jobs[i].jobId == jobId && jobs[i].running) {
@@ -63,6 +77,10 @@ int kill_job(int jobId) {
     return -1;
 }
 
+/**
+ * Brings a job to the foreground by its job ID.
+ * @return 0 on success, -1 on failure.
+ */
 int fg_job(int jobId) {
     for (int i = 0; i < jobCount; i++) {
         if (jobs[i].jobId == jobId && jobs[i].running) {
@@ -79,10 +97,16 @@ int fg_job(int jobId) {
     return -1;
 }
 
+/**
+ * Handles the 'jobs' built-in command to list jobs.
+ */
 void handle_jobs() {
     list_jobs();
 }
 
+/**
+ * Handles the 'kill' built-in command to terminate a job.
+ */
 void handle_kill(char **args) {
     if (args[1]) {
         int jobId = atoi(args[1]);
@@ -92,6 +116,9 @@ void handle_kill(char **args) {
     }
 }
 
+/**
+ * Handles the 'fg' built-in command to bring a job to the foreground.
+ */
 void handle_fg(char **args) {
     if (args[1]) {
         int jobId = atoi(args[1]);

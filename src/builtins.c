@@ -19,6 +19,10 @@
 #include "shell.h"
 #include "jobs.h"
 
+/**
+ * Handles the 'cd' built-in command to change the current directory.
+ * If no argument is provided, changes to the user's home directory.
+ */
 void handle_cd(char **args) {
     char *path;
     if (args[1] == NULL) {
@@ -35,6 +39,9 @@ void handle_cd(char **args) {
     }
 }
 
+/**
+ * Handles the 'pwd' built-in command to print the current working directory.
+ */
 void handle_pwd() {
     char cwd[PATH_MAX];
     if (getcwd(cwd, sizeof(cwd)) != NULL) {
@@ -44,16 +51,25 @@ void handle_pwd() {
     }
 }
 
+/**
+ * Handles the 'exit' built-in command to exit the shell.
+ */
 void handle_exit() {
     printf("Exiting shell...\n");
     exit(0);
 }
 
 #ifdef _WIN32
+/**
+ * Handles the 'jobs' built-in command to list background jobs (Windows).
+ */
 void handle_jobs() {
     list_jobs();
 }
 
+/**
+ * Handles the 'kill' built-in command to terminate a job by its ID (Windows).
+ */
 void handle_kill(char **args) {
     if (args[1] == NULL) {
         fprintf(stderr, "kill: job id required\n");
@@ -73,6 +89,9 @@ void handle_kill(char **args) {
     }
 }
 
+/**
+ * Handles the 'fg' built-in command to bring a job to the foreground (Windows).
+ */
 void handle_fg(char **args) {
     if (args[1] == NULL) {
         fprintf(stderr, "fg: job id required\n");
@@ -94,11 +113,17 @@ void handle_fg(char **args) {
 }
 #endif
 
-// Function to check and execute built-in commands
+/**
+ * Handles the 'history' built-in command to print the command history.
+ */
 void handle_history() {
     print_history();
 }
 
+/**
+ * Executes a built-in command if it matches one of the supported commands.
+ * Returns 1 if a built-in command was executed, 0 otherwise.
+ */
 int execute_builtin(char **args) {
     if (strcmp(args[0], "cd") == 0) {
         handle_cd(args);

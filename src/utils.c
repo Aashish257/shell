@@ -7,6 +7,13 @@
 #endif
 #include "shell.h"
 
+/**
+ * Parses the input command string into arguments.
+ * Detects if the command should be run in the background (if '&' is the last token).
+ * @param input The input command string.
+ * @param args Array to store parsed arguments.
+ * @return 1 if the command should run in the background, 0 otherwise.
+ */
 int parse_input(char *input, char **args) {
     if (input == NULL || strlen(input) == 0 || strspn(input, " ") == strlen(input)) {
         fprintf(stderr, "Error: No input provided\n");
