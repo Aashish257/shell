@@ -118,18 +118,7 @@ Run your shell executable:
 
 ---
 
-## 🤝 Contributing
 
-Contributions are welcome!  
-- Fork the repository
-- Create a feature branch
-- Submit a pull request
-
----
-
-## ⚖ License
-
-This project is licensed under the **MIT License**.
 
 ---
 
