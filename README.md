@@ -1,75 +1,138 @@
-# MyShell
+# 🐚 MyShell
 
-MyShell is a lightweight, minimalistic command-line shell implemented in C, designed to provide a simple and efficient interface for executing Unix-like commands on Windows and Unix-like platforms. It supports essential shell functionalities including built-in commands, background job control, piping, and input/output redirection, making it a versatile tool for basic shell operations.
+> A lightweight, minimalistic command-line shell implemented in **C**, designed to execute Unix-like commands on **Windows and Unix-like platforms**.  
+Supports essential shell functionalities including built-in commands, background jobs, piping, and I/O redirection.
 
-## Features
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Unix-lightgrey)
+![Language](https://img.shields.io/badge/language-C-brightgreen)
 
-- Built-in commands: `cd`, `pwd`, `exit`, `jobs` (Windows only), `kill` (Windows only), `fg` (Windows only), `history`
-- Support for background execution of commands using `&`
-- Command piping to connect multiple commands
-- Input and output redirection using `<` and `>`
-- Basic job control for managing background processes (Windows only)
-- Command history with persistent storage in `history/command_history.txt`
-- Cross-platform compatibility with primary support for Windows environments
-- Utility helper functions declared in `include/utils.h`
-- Parser implementation is currently a placeholder
+---
 
-## Source Files
+## 🚀 Features
 
-- `src/main.c`: Main program and input processing
-- `src/utils.c`: Utility functions including input parsing
-- `src/builtins.c`: Built-in shell commands implementation
-- `src/executor.c`: Command execution and process management
-- `src/jobs.c`: Job control implementation (Windows only)
-- `src/history.c`: Command history management
-- `src/parser.c`: Command parser (to be implemented)
+✅ **Built-in commands**: `cd`, `pwd`, `exit`, `history`, and on Windows: `jobs`, `kill`, `fg`  
+✅ **Background execution** using `&`  
+✅ **Command piping** (`|`) to chain commands  
+✅ **Input & output redirection** (`<`, `>`)  
+✅ **Basic job control** (Windows only)  
+✅ **Persistent command history** (`history/command_history.txt`)  
+✅ **Cross-platform support**, primarily Windows
 
-## Build Instructions
+---
 
-To compile the shell, use the following command:
+## 📂 Table of Contents
+- [Features](#-features)
+- [Source Structure](#-source-structure)
+- [Build Instructions](#-build-instructions)
+- [Usage](#-usage)
+- [Examples](#-examples)
+- [Notes](#-notes)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Contact](#-contact)
+
+---
+
+## 🗂 Source Structure
+
+| File                  | Description                                  |
+|------------------------|---------------------------------------------|
+| `src/main.c`            | Main program & user input loop              |
+| `src/utils.c`           | Helper utility functions                   |
+| `src/builtins.c`        | Built-in shell commands implementation     |
+| `src/executor.c`        | Command execution & process management     |
+| `src/jobs.c`            | Background job control (Windows only)      |
+| `src/history.c`         | Command history management                 |
+| `src/parser.c`          | Placeholder for advanced parsing           |
+| `include/utils.h`       | Utility function declarations              |
+
+---
+
+## 🛠 Build Instructions
+
+Make sure you have GCC installed.
 
 ```bash
 gcc -o myshell src/main.c src/utils.c src/builtins.c src/executor.c src/jobs.c src/history.c
 ```
 
-Ensure you have a C compiler installed (e.g., GCC). For full job control functionality, compile and run on a Windows system.
+- ✅ Recommended to compile & run on **Windows** for full job control functionality.
+- On Unix-like systems, it works for general commands but without `jobs`, `fg`, and `kill`.
 
-## Usage
+---
 
-Run the shell executable:
+## 💻 Usage
+
+Run your shell executable:
 
 ```bash
 ./myshell
 ```
 
-You can then enter commands such as:
+---
 
-- `pwd`: Display the current working directory.
-- `cd <directory>`: Change the current directory.
-- `dir`: List the contents of the current directory (external command).
-- `exit`: Terminate the shell.
-- `jobs`: List background jobs (Windows only).
-- `kill <job_id>`: Terminate a background job by its job ID (Windows only).
-- `fg <job_id>`: Bring a background job to the foreground (Windows only).
-- `history`: Display the command history.
-- Use `&` at the end of a command to run it in the background, e.g., `notepad &`.
+## ⚙ Examples
 
-You can also use piping and redirection, for example:
+- **Basic commands**
+  ```bash
+  pwd
+  cd <directory>
+  dir
+  exit
+  history
+  ```
 
-```bash
-dir | find "txt"
-dir > output.txt
-type < input.txt
-```
+- **Run in background**
+  ```bash
+  notepad &
+  ```
 
-## Additional Notes
+- **Piping**
+  ```bash
+  dir | find "txt"
+  ```
 
-- The `pwd` command may not be recognized in Windows Command Prompt; use `echo %cd%` instead to display the current directory.
-- Job control features (`jobs`, `kill`, `fg`) are only available on Windows platforms.
-- Command history is saved persistently in `history/command_history.txt`.
-- The parser implementation is currently a placeholder and may not support complex command parsing.
-- This shell is intended for educational purposes and basic command execution; it does not support advanced shell scripting features.
+- **Redirection**
+  ```bash
+  dir > output.txt
+  type < input.txt
+  ```
 
-## Contributing
+- **Job control (Windows only)**
+  ```bash
+  jobs
+  kill <job_id>
+  fg <job_id>
+  ```
 
-Contributions are welcome! Feel free to fork the repository and submit pull requests for improvements or bug fixes.
+---
+
+## 📝 Notes
+
+- On Windows, `pwd` might not be recognized — use `echo %cd%`.
+- `jobs`, `kill`, `fg` only work on **Windows**.
+- Command history is saved at `history/command_history.txt`.
+- Parser is currently a placeholder; does **not support complex syntax or scripting**.
+- Intended primarily for educational purposes & simple shell operations.
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome!  
+- Fork the repository
+- Create a feature branch
+- Submit a pull request
+
+---
+
+## ⚖ License
+
+This project is licensed under the **MIT License**.
+
+---
+
+## 📧 Contact
+
+For queries or suggestions, feel free to reach out or open an issue.
